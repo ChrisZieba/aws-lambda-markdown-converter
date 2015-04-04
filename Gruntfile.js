@@ -8,7 +8,7 @@ grunt.initConfig({
     },
     lambda_deploy: {
         default: {
-            function: 'link-scraper'
+            function: 'MarkdownConverter'
         }
     },
     lambda_package: {
