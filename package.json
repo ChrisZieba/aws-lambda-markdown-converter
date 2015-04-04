@@ -1,20 +1,24 @@
 {
-    "name": "dodgercms-converter",
+    "name": "aws-lambda-markdown-converter",
     "version": "0.0.1",
-    "description": "Converts markdown to HTML for DodgerCMS",
+    "description": "Converts markdown to HTML.",
     "private": "false",
     "dependencies": {
         "marked": "0.3.*",
-        "async": "0.2.*"
+        "async": "0.2.*",
+        "mustache": "0.8.*",
+        "config": "0.4.*"
     },
     "devDependencies": {
         "grunt": "0.4.*",
-        "grunt-aws-lambda": "0.3.0",
+        "grunt-aws-lambda": "0.3.*",
         "aws-sdk": "2.*"
     },
     "bundledDependencies": [
         "marked",
-        "async"
+        "async",
+        "mustache",
+        "config"
     ],
     "author": "Chris Zieba (zieba.chris@gmail.com)",
     "license": "MIT"
