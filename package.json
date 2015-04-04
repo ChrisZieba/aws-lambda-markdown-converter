@@ -3,10 +3,19 @@
     "version": "0.0.1",
     "description": "Converts markdown to HTML for DodgerCMS",
     "private": "false",
+    "dependencies": {
+        "marked": "0.3.*",
+        "async": "0.2.*"
+    },
     "devDependencies": {
         "grunt": "0.4.*",
-        "grunt-aws-lambda": "0.3.0"
+        "grunt-aws-lambda": "0.3.0",
+        "aws-sdk": "2.*"
     },
+    "bundledDependencies": [
+        "marked",
+        "async"
+    ],
     "author": "Chris Zieba (zieba.chris@gmail.com)",
     "license": "MIT"
 }
