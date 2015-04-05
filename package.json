@@ -6,8 +6,9 @@
     "dependencies": {
         "marked": "0.3.*",
         "async": "0.2.*",
-        "mustache": "0.8.*",
-        "config": "0.4.*"
+        "mustache": "2.*",
+        "config": "0.4.*",
+        "highlight.js": "8.5.*"
     },
     "devDependencies": {
         "grunt": "0.4.*",
