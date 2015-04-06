@@ -1,7 +1,7 @@
 {
     "name": "aws-lambda-markdown-converter",
     "version": "0.0.1",
-    "description": "Converts markdown to HTML.",
+    "description": "Converts markdown to HTML and uploads the contents to an S3 bucket.",
     "private": "false",
     "dependencies": {
         "marked": "0.3.*",
@@ -19,7 +19,8 @@
         "marked",
         "async",
         "mustache",
-        "config"
+        "config",
+        "highlight.js"
     ],
     "author": "Chris Zieba (zieba.chris@gmail.com)",
     "license": "MIT"
