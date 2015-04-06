@@ -65,7 +65,9 @@ exports.handler = function(event, context) {
         function(body, callback) {
 
             var view = {
-                body: body
+                body: body,
+                bucket: config.targetBucket,
+                domain: config.domain
             };
 
             fs.readFile("./templates/entry.html", "utf8", function(err, data) {
@@ -103,7 +105,6 @@ exports.handler = function(event, context) {
         },
         // The navigatio needs to be updated
         function(callback) {
-            console.log('navigation');
             // get the .menu file
 
             // get all the objects in the bucket
@@ -174,23 +175,23 @@ exports.handler = function(event, context) {
                 // See if that segment already exists in the current scope
                 var found = findInScope(scope, current);
 
-                // If we did not find a match, create the new object for
-                // this path segment
-                if (! found) {
+                // If we did not find a match, create the new object for this path segment
+                if (!found) {
                     scope.push(found = {
-                        label: current
+                        label: current,
+                        children: false
                     });
                 }
 
                 // If there are still path segments left, we need to create
                 // a children array (if we haven't already) and recurse further
                 if (pathSegments.length) {
-                    found.children = found.children || [ ];
+                    found.children = found.children || [];
                     buildFromSegments(found.children, pathSegments);
                 }
             }
 
-            // Attempts to find a ptah segment in the current scope
+            // Attempts to find a path segment in the current scope
             function findInScope(scope, find) {
                 for (var i = 0; i < scope.length; i++) {
                     if (scope[i].label === find) {
@@ -204,6 +205,7 @@ exports.handler = function(event, context) {
 
                 // if it ends with a slash its a directory
                 var isDir = (key.substr(-1) === '/') ? true : false;
+                // remove the last slash if is exists so there is no empty string in the split array
                 var parts = data.Key.replace(/\/\s*$/, "").split('/');
 
                 buildFromSegments(tree, parts, isDir);
@@ -211,12 +213,63 @@ exports.handler = function(event, context) {
 
 
             console.log(JSON.stringify(tree, null, 4));
-            callback(null);
+
+
+
+            fs.readFile("./templates/partials/menu.html", "utf8", function(err, menu) {
+                if (err) {
+                    callback(err);
+                } else {
+                    var view = {
+                        nav: tree,
+                    };
+
+                    var partials = {
+                        menu: menu
+                    };
+
+                    fs.readFile("./templates/nav.html", "utf8", function(err, data) {
+                        if (err) {
+                            callback(err);
+                        } else {
+                            var output = mustache.render(data.toString(), view, partials);
+                            console.log(output)
+                            callback(null, output);
+                        }
+                    });
+
+                }
+            });
+
+
 
 
 
         },
 
+        // upload the nav to the bucket
+        function(nav, callback) {
+            var metadata = {
+                "Content-Type": "text/html"
+            };
+
+            var params = {
+                Bucket: config.targetBucket,
+                Key: ".dodgercms/nav.html",
+                Body: nav,
+                ContentType: "text/html",
+                Expires: 0,
+                CacheControl: "public, max-age=0, no-cache"
+            };
+            s3.upload(params, function(err, data) {
+                if (err) {
+                    callback(err);
+                } else {
+                    console.log('upload successful');
+                    callback(null);
+                }
+            });
+        }
     ], function(err, result) {
         if (err) {
             context.done('error', err);
